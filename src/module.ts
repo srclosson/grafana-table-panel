@@ -191,6 +191,8 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     let data;
     let panel = ctrl.panel;
     let pageCount = 0;
+    let container = elem.find('div.panel-container');
+    let table = elem.find('div.constrainer');
 
     function getTableHeight() {
       let panelHeight = ctrl.height;
@@ -203,12 +205,8 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     }
     
     function getTableWidth() {
-      var x = $(".panel-container").width();
-      console.log(x);
-      //let panelWidth = ctrl.width;
-      
+      var x = table.width();
       return x + 'px';
-      //return panelWidth - 31 + 'px';
     }
 
     function appendTableRows(tbodyElem) {
@@ -297,6 +295,13 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     elem.on('click', '.table-panel-page-link', switchPage);
     elem.on('click', '.table-panel-filter-link', addFilterClicked);
 
+    let tbody = table.find('tbody');
+    tbody.on('scroll', function(e) {
+      table.find('thead').css("left", -tbody.scrollLeft()); //fix the thead relative to the body scrolling
+      table.find('thead th:nth-child(1)').css("left", tbody.scrollLeft()); //fix the first cell of the header
+      table.find('tbody td:nth-child(1)').css("left", tbody.scrollLeft()); //fix the first column of tdbody    
+    });
+    
     let unbindDestroy = scope.$on('$destroy', function() {
       elem.off('click', '.table-panel-page-link');
       elem.off('click', '.table-panel-filter-link');
