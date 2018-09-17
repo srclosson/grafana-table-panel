@@ -9,6 +9,7 @@ import {transformDataToTable} from './transformers';
 import {tablePanelEditor} from './editor';
 import {columnOptionsTab} from './column_options';
 import {TableRenderer} from './renderer';
+import './css/panel.css!';
 
 class TablePanelCtrl extends MetricsPanelCtrl {
   static templateUrl = 'partials/module.html';
@@ -200,6 +201,15 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
       return panelHeight - 31 + 'px';
     }
+    
+    function getTableWidth() {
+      var x = $(".panel-container").width();
+      console.log(x);
+      //let panelWidth = ctrl.width;
+      
+      return x + 'px';
+      //return panelWidth - 31 + 'px';
+    }
 
     function appendTableRows(tbodyElem) {
       ctrl.renderer.setTable(data);
@@ -244,7 +254,8 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
     function renderPanel() {
       let panelElem = elem.parents('.panel');
-      let rootElem = elem.find('.table-panel-scroll');
+      let hElem = elem.find('.set-height');
+      let wElem = elem.find('.set-width');
       let tbodyElem = elem.find('tbody');
       let footerElem = elem.find('.table-panel-footer');
 
@@ -254,7 +265,16 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       appendTableRows(tbodyElem);
       appendPaginationControls(footerElem);
 
-      rootElem.css({'max-height': panel.scroll ? getTableHeight() : ''});
+      $('thead').css("left", -$("tbody").scrollLeft()); //fix the thead relative to the body scrolling
+      $('thead th:nth-child(1)').css("left", $("tbody").scrollLeft()); //fix the first cell of the header
+      $('tbody td:nth-child(1)').css("left", $("tbody").scrollLeft()); //fix the first column of tdbody
+    
+      hElem.css({
+          'height': panel.scroll ? getTableHeight() : '',
+        });
+      wElem.css({
+          'width': panel.scroll ? getTableWidth() : '',
+        });
     }
 
     // hook up link tooltips

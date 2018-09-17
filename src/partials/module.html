@@ -1,25 +1,23 @@
-
-<div class="table-panel-container">
-	<div class="table-panel-header-bg" ng-show="ctrl.table.rows.length"></div>
-	<div class="table-panel-scroll" ng-show="ctrl.table.rows.length">
-		<table class="table-panel-table">
-			<thead>
-				<tr>
-					<th ng-repeat="col in ctrl.table.columns" ng-hide="col.hidden">
-						<div class="table-panel-table-header-inner pointer" ng-click="ctrl.toggleColumnSort(col, $index)">
-							{{col.title}}
-							<span class="table-panel-table-header-controls" ng-if="col.sort">
-								<i class="fa fa-caret-down" ng-show="col.desc"></i>
-								<i class="fa fa-caret-up" ng-hide="col.desc"></i>
-							</span>
-						</div>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
-	</div>
+<div class="constrainer">
+  <div class="scrolltable set-width" ng-show="ctrl.table.rows.length">
+    <table class="table-panel-table">
+      <thead class="panel-header table-panel-header-bg">
+        <tr>
+          <th ng-repeat="col in ctrl.table.columns" ng-hide="col.hidden">
+            <div class="table-panel-table-header-inner pointer" ng-click="ctrl.toggleColumnSort(col, $index)">
+              {{col.title}}
+              <span class="table-panel-table-header-controls" ng-if="col.sort">
+                <i class="fa fa-caret-down" ng-show="col.desc"></i>
+                <i class="fa fa-caret-up" ng-hide="col.desc"></i>
+              </span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="set-height set-width">
+      </tbody>    
+    </table>
+  </div>
 </div>
 <div class="datapoints-warning" ng-show="ctrl.table.rows.length===0">
 	<span class="small" >
@@ -28,3 +26,17 @@
 </div>
 <div class="table-panel-footer">
 </div>
+<script>
+$(document).ready(function() {
+  $('tbody').scroll(function(e) { //detect a scroll event on the tbody
+    console.log("another event");
+  	/*
+    Setting the thead left value to the negative valule of tbody.scrollLeft will make it track the movement
+    of the tbody element. Setting an elements left value to that of the tbody.scrollLeft left makes it maintain 			it's relative position at the left of the table.    
+    */
+    $('thead').css("left", -$("tbody").scrollLeft()); //fix the thead relative to the body scrolling
+    $('thead th:nth-child(1)').css("left", $("tbody").scrollLeft()); //fix the first cell of the header
+    $('tbody td:nth-child(1)').css("left", $("tbody").scrollLeft()); //fix the first column of tdbody
+  });
+});
+</script>
